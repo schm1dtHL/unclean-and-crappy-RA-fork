@@ -18,7 +18,7 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_FAVORITES_TAB,
-   "Favorites"
+   "Games"
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_HISTORY_TAB,
@@ -38,7 +38,7 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_NETPLAY_TAB,
-   "Netplay"
+   "Network"
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_ADD_TAB,
@@ -3873,11 +3873,11 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_QUICK_MENU_SHOW_ADD_TO_FAVORITES,
-   "Show Add to Favorites"
+   "Show Add to Games List"
    )
 MSG_HASH(
    MENU_ENUM_SUBLABEL_QUICK_MENU_SHOW_ADD_TO_FAVORITES,
-   "Show or hide the 'Add to Favorites' option."
+   "Show or hide the 'Add to Games List' option."
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_QUICK_MENU_SHOW_START_RECORDING,
@@ -4376,6 +4376,14 @@ MSG_HASH(
    MENU_ENUM_SUBLABEL_CHEEVOS_TEST_UNOFFICIAL,
    "Use unofficial achievements and/or beta features for testing purposes."
    )
+MSG_HASH(
+   MENU_ENUM_LABEL_VALUE_CHEEVOS_UNLOCK_SOUND_ENABLE,
+   "Unlock Sound"
+   )
+MSG_HASH(
+   MENU_ENUM_SUBLABEL_CHEEVOS_UNLOCK_SOUND_ENABLE,
+   "Plays a sound when an achievement is unlocked."
+   )   
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_CHEEVOS_VERBOSE_ENABLE,
    "Verbose Mode"
@@ -5382,7 +5390,7 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_ADD_TO_FAVORITES_PLAYLIST,
-   "Add to Favorites"
+   "Add to Games List"
    )
 MSG_HASH(
    MENU_ENUM_SUBLABEL_ADD_TO_FAVORITES_PLAYLIST,
@@ -5523,11 +5531,11 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_ADD_TO_FAVORITES,
-   "Add to Favorites"
+   "Add to Games List"
    )
 MSG_HASH(
    MENU_ENUM_SUBLABEL_ADD_TO_FAVORITES,
-   "Add the entry to your favorites."
+   "Add the entry to your games list."
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_QUICK_MENU_START_RECORDING,
@@ -7069,11 +7077,11 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_ON,
-   "ON"
+   "Enabled"
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_OFF,
-   "OFF"
+   "Disabled"
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_YES,
@@ -8326,11 +8334,11 @@ MSG_HASH(
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_MATERIALUI_LANDSCAPE_LAYOUT_OPTIMIZATION_DISABLED,
-   "OFF"
+   "Disabled"
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_MATERIALUI_LANDSCAPE_LAYOUT_OPTIMIZATION_ALWAYS,
-   "ON"
+   "Enabled"
    )
 MSG_HASH(
    MENU_ENUM_LABEL_VALUE_MATERIALUI_LANDSCAPE_LAYOUT_OPTIMIZATION_EXCLUDE_THUMBNAIL_VIEWS,

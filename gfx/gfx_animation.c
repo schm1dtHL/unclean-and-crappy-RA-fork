@@ -34,6 +34,23 @@
 #include "gfx_animation.h"
 #include "../performance_counters.h"
 
+#define TICKER_PIXEL_PERIOD (16.666666666666668f)
+
+/* Mean human reading speed for all western languages,
+ * characters per minute */
+#define TICKER_CPM                                1000.0f
+/* Base time for which a line should be shown, in us */
+#define TICKER_LINE_DURATION_US(line_len)         ((line_len * 60.0f * 1000.0f * 1000.0f) / TICKER_CPM)
+/* Base time for which a line should be shown, in ms */
+#define TICKER_LINE_DURATION_MS(line_len)         ((line_len * 60.0f * 1000.0f) / TICKER_CPM)
+/* Ticker updates (nominally) once every TICKER_SPEED us
+ * > Base number of ticks for which line should be shown */
+#define TICKER_LINE_DISPLAY_TICKS(line_len)       ((size_t)(TICKER_LINE_DURATION_US(line_len) / (float)TICKER_SPEED))
+/* Smooth ticker updates (nominally) once every TICKER_PIXEL_PERIOD ms
+ * > Base number of ticks for which text should scroll
+ *   from one line to the next */
+#define TICKER_LINE_SMOOTH_SCROLL_TICKS(line_len) ((size_t)(TICKER_LINE_DURATION_MS(line_len) / TICKER_PIXEL_PERIOD))
+
 typedef float (*easing_cb) (float, float, float, float);
 
 struct tween
@@ -77,13 +94,6 @@ typedef struct gfx_animation gfx_animation_t;
 
 #define TICKER_SPEED       333333
 #define TICKER_SLOW_SPEED  1666666
-
-/* Pixel ticker nominally increases by one after each
- * ticker_pixel_period ms (actual increase depends upon
- * ticker speed setting and display resolution) */
-static const float ticker_pixel_period = (1.0f / 60.0f) * 1000.0f;
-
-static const char ticker_spacer_default[] = TICKER_SPACER_DEFAULT;
  
 /* Forward declarations */
 static void gfx_animation_update_time_default(
@@ -796,23 +806,11 @@ static void gfx_animation_ticker_smooth_loop(uint64_t idx,
    }
 }
 
-static size_t get_line_display_ticks(size_t line_len)
-{
-   /* Mean human reading speed for all western languages,
-    * characters per minute */
-   float cpm            = 1000.0f;
-   /* Base time for which a line should be shown, in us */
-   float line_duration  = (line_len * 60.0f * 1000.0f * 1000.0f) / cpm;
-   /* Ticker updates (nominally) once every TICKER_SPEED us
-    * > Return base number of ticks for which line should be shown */
-   return (size_t)(line_duration / (float)TICKER_SPEED);
-}
-
 static void gfx_animation_line_ticker_generic(uint64_t idx,
       size_t line_len, size_t max_lines, size_t num_lines,
       size_t *line_offset)
 {
-   size_t line_ticks    = get_line_display_ticks(line_len);
+   size_t line_ticks    = TICKER_LINE_DISPLAY_TICKS(line_len);
    /* Note: This function is only called if num_lines > max_lines */
    size_t excess_lines  = num_lines - max_lines;
    /* Ticker will pause for one line duration when the first
@@ -842,25 +840,12 @@ static void gfx_animation_line_ticker_loop(uint64_t idx,
       size_t line_len, size_t num_lines,
       size_t *line_offset)
 {
-   size_t line_ticks    = get_line_display_ticks(line_len);
+   size_t line_ticks    = TICKER_LINE_DISPLAY_TICKS(line_len);
    size_t ticker_period = num_lines + 1;
    size_t phase         = (idx / line_ticks) % ticker_period;
 
    /* In this case, line_offset is simply equal to the phase */
    *line_offset = phase;
-}
-
-static size_t get_line_smooth_scroll_ticks(size_t line_len)
-{
-   /* Mean human reading speed for all western languages,
-    * characters per minute */
-   float cpm            = 1000.0f;
-   /* Base time for which a line should be shown, in ms */
-   float line_duration  = (line_len * 60.0f * 1000.0f) / cpm;
-   /* Ticker updates (nominally) once every ticker_pixel_period ms
-    * > Return base number of ticks for which text should scroll
-    *   from one line to the next */
-   return (size_t)(line_duration / ticker_pixel_period);
 }
 
 static void set_line_smooth_fade_parameters(
@@ -911,7 +896,7 @@ static void gfx_animation_line_ticker_smooth_generic(uint64_t idx,
       size_t *top_fade_line_offset, float *top_fade_y_offset, float *top_fade_alpha,
       size_t *bottom_fade_line_offset, float *bottom_fade_y_offset, float *bottom_fade_alpha)
 {
-   size_t scroll_ticks  = get_line_smooth_scroll_ticks(line_len);
+   size_t scroll_ticks  = TICKER_LINE_SMOOTH_SCROLL_TICKS(line_len);
    /* Note: This function is only called if num_lines > max_display_lines */
    size_t excess_lines  = num_lines - max_display_lines;
    /* Ticker will pause for one line duration when the first
@@ -997,7 +982,7 @@ static void gfx_animation_line_ticker_smooth_loop(uint64_t idx,
       size_t *top_fade_line_offset, float *top_fade_y_offset, float *top_fade_alpha,
       size_t *bottom_fade_line_offset, float *bottom_fade_y_offset, float *bottom_fade_alpha)
 {
-   size_t scroll_ticks  = get_line_smooth_scroll_ticks(line_len);
+   size_t scroll_ticks  = TICKER_LINE_SMOOTH_SCROLL_TICKS(line_len);
    size_t ticker_period = (num_lines + 1) * scroll_ticks;
    size_t phase         = idx % ticker_period;
    size_t line_phase    = phase % scroll_ticks;
@@ -1289,7 +1274,7 @@ static void gfx_animation_update_time(
        * special handling */
 
       /* > Get base increment size (+1 every ticker_pixel_period ms) */
-      ticker_pixel_increment = p_anim->delta_time / ticker_pixel_period;
+      ticker_pixel_increment = p_anim->delta_time / TICKER_PIXEL_PERIOD;
 
       /* > Apply ticker speed adjustment */
       ticker_pixel_increment *= speed_factor;
@@ -1454,7 +1439,7 @@ bool gfx_animation_ticker(gfx_animation_ctx_ticker_t *ticker)
    size_t str_len          = utf8len(ticker->str);
 
    if (!ticker->spacer)
-      ticker->spacer = ticker_spacer_default;
+      ticker->spacer = TICKER_SPACER_DEFAULT;
 
    if ((size_t)str_len <= ticker->len)
    {
@@ -1592,7 +1577,7 @@ bool gfx_animation_ticker_smooth_fw(gfx_animation_ctx_ticker_smooth_t *ticker)
 
    /* Use default spacer, if none is provided */
    if (!ticker->spacer)
-      ticker->spacer = ticker_spacer_default;
+      ticker->spacer = TICKER_SPACER_DEFAULT;
 
    /* Get length + width of spacer */
    spacer_len = utf8len(ticker->spacer);
@@ -1801,7 +1786,7 @@ bool gfx_animation_ticker_smooth(gfx_animation_ctx_ticker_smooth_t *ticker)
 
    /* Use default spacer, if none is provided */
    if (!ticker->spacer)
-      ticker->spacer = ticker_spacer_default;
+      ticker->spacer = TICKER_SPACER_DEFAULT;
 
    /* Find the display width of each character in
     * the spacer */

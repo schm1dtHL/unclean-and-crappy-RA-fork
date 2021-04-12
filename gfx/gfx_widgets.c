@@ -78,17 +78,17 @@ static float gfx_widgets_pure_white[16]                  = {
 };
 
 static float gfx_widgets_backdrop_orig[16]               = {
-   0.00, 0.00, 0.00, 0.75,
-   0.00, 0.00, 0.00, 0.75,
-   0.00, 0.00, 0.00, 0.75,
-   0.00, 0.00, 0.00, 0.75,
+   0.33, 0.00, 0.33, 0.75,
+   0.33, 0.00, 0.33, 0.75,
+   0.33, 0.00, 0.33, 0.75,
+   0.33, 0.33, 0.33, 0.75,
 };
 
 static float gfx_widgets_backdrop[16]                    = {
-      0.00, 0.00, 0.00, 0.75,
-      0.00, 0.00, 0.00, 0.75,
-      0.00, 0.00, 0.00, 0.75,
-      0.00, 0.00, 0.00, 0.75,
+      0.33, 0.33, 0.33, 0.75,
+      0.33, 0.33, 0.33, 0.75,
+      0.33, 0.33, 0.33, 0.75,
+      0.33, 0.33, 0.33, 0.75,
 };
 
 /* Icons */
@@ -104,7 +104,13 @@ static const char
 
    "menu_info.png",
 
-   "menu_achievements.png"
+   "menu_achievements.png",
+   
+   "menu_background.png",
+   
+   "menu_edge1.png",
+   
+   "menu_edge2.png"
 };
 
 /* Forward declarations */
